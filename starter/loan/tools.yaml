@@ -9,7 +9,7 @@ sources:
 
 tools:
   get-outstanding-balance:
-    kind: mysql-query
+    kind: mysql-sql
     source: loan
     description: Get the outstanding balance for a specific loan by loan type
     parameters:
@@ -22,7 +22,7 @@ tools:
       WHERE loan_type = $1
 
   get-loan-details:
-    kind: mysql-query
+    kind: mysql-sql
     source: loan
     description: Get full details for a specific loan including terms, amount, and payment info
     parameters:
@@ -35,7 +35,7 @@ tools:
       WHERE loan_type = $1
 
   get-next-payment-date:
-    kind: mysql-query
+    kind: mysql-sql
     source: loan
     description: Get the next payment date and amount for a specific loan
     parameters:
@@ -48,7 +48,7 @@ tools:
       WHERE loan_type = $1
 
   list-loans:
-    kind: mysql-query
+    kind: mysql-sql
     source: loan
     description: List all loans for the customer
     statement: |
@@ -56,7 +56,7 @@ tools:
       FROM loans
 
   get-total-outstanding-balance:
-    kind: mysql-query
+    kind: mysql-sql
     source: loan
     description: Get the total outstanding balance across all loans
     statement: |

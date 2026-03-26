@@ -9,7 +9,7 @@ sources:
 
 tools:
   get-account-balance:
-    kind: mysql-query
+    kind: mysql-sql
     source: deposit
     description: Get the current balance for a specific account by account type name
     parameters:
@@ -22,7 +22,7 @@ tools:
       WHERE account_type = $1
 
   get-recent-transactions:
-    kind: mysql-query
+    kind: mysql-sql
     source: deposit
     description: Get the most recent transactions for a specific account
     parameters:
@@ -41,7 +41,7 @@ tools:
       LIMIT $2
 
   list-accounts:
-    kind: mysql-query
+    kind: mysql-sql
     source: deposit
     description: List all deposit accounts for the customer
     statement: |
@@ -49,7 +49,7 @@ tools:
       FROM accounts
 
   check-minimum-balance:
-    kind: mysql-query
+    kind: mysql-sql
     source: deposit
     description: Check if the total balance across all deposit accounts exceeds a minimum value. Returns true if total >= minimum, false otherwise.
     parameters:
