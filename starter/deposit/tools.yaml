@@ -1,0 +1,49 @@
+sources:
+  deposit:
+    kind: mysql
+    host: ${MYSQL_HOST}
+    port: ${MYSQL_PORT:3306}
+    database: bank
+    user: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+
+tools:
+  get-account-balance:
+    kind: mysql-query
+    source: deposit
+    description: Get the current balance for a specific account by account type name
+    parameters:
+      - name: account_type
+        type: string
+        description: The type/name of the account (e.g., 'vacation', 'primary')
+    statement: |
+      SELECT account_type, balance
+      FROM accounts
+      WHERE account_type = $1
+
+  get-recent-transactions:
+    kind: mysql-query
+    source: deposit
+    description: Get the most recent transactions for a specific account
+    parameters:
+      - name: account_type
+        type: string
+        description: The type/name of the account (e.g., 'vacation', 'primary')
+      - name: limit
+        type: integer
+        description: Maximum number of transactions to return (default 10)
+    statement: |
+      SELECT t.transaction_date, t.amount, t.description
+      FROM transactions t
+      JOIN accounts a ON t.account_id = a.id
+      WHERE a.account_type = $1
+      ORDER BY t.transaction_date DESC
+      LIMIT $2
+
+  list-accounts:
+    kind: mysql-query
+    source: deposit
+    description: List all deposit accounts for the customer
+    statement: |
+      SELECT account_type, balance
+      FROM accounts

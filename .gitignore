@@ -1,0 +1,57 @@
+# Environment and secrets
+.env
+*.env
+.env.*
+service-account-key.json
+*-key.json
+credentials.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+rubric.md
+project.md
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Package manager
+uv.lock
+.python-version
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test output
+test_results.*
+*.log

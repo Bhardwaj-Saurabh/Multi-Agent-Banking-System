@@ -1,0 +1,64 @@
+sources:
+  loan:
+    kind: mysql
+    host: ${MYSQL_HOST}
+    port: ${MYSQL_PORT:3306}
+    database: bank
+    user: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+
+tools:
+  get-outstanding-balance:
+    kind: mysql-query
+    source: loan
+    description: Get the outstanding balance for a specific loan by loan type
+    parameters:
+      - name: loan_type
+        type: string
+        description: The type of loan (e.g., 'auto', 'personal', 'mortgage')
+    statement: |
+      SELECT loan_type, outstanding_balance
+      FROM loans
+      WHERE loan_type = $1
+
+  get-loan-details:
+    kind: mysql-query
+    source: loan
+    description: Get full details for a specific loan including terms, amount, and payment info
+    parameters:
+      - name: loan_type
+        type: string
+        description: The type of loan (e.g., 'auto', 'personal', 'mortgage')
+    statement: |
+      SELECT loan_type, origination_date, amount, outstanding_balance, terms, monthly_payment, next_payment_date
+      FROM loans
+      WHERE loan_type = $1
+
+  get-next-payment-date:
+    kind: mysql-query
+    source: loan
+    description: Get the next payment date and amount for a specific loan
+    parameters:
+      - name: loan_type
+        type: string
+        description: The type of loan (e.g., 'auto', 'personal', 'mortgage')
+    statement: |
+      SELECT loan_type, next_payment_date, monthly_payment
+      FROM loans
+      WHERE loan_type = $1
+
+  list-loans:
+    kind: mysql-query
+    source: loan
+    description: List all loans for the customer
+    statement: |
+      SELECT loan_type, outstanding_balance, monthly_payment, next_payment_date
+      FROM loans
+
+  get-total-outstanding-balance:
+    kind: mysql-query
+    source: loan
+    description: Get the total outstanding balance across all loans
+    statement: |
+      SELECT SUM(outstanding_balance) as total_outstanding_balance
+      FROM loans

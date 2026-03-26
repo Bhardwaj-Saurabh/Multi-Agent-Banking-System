@@ -1,0 +1,33 @@
+{
+  "name": "Loan Account Agent",
+  "description": "Handles customer questions about loans including auto loans, personal loans, and mortgages. Can provide loan balances, payment details, and loan terms.",
+  "url": "http://localhost:8000/a2a/loan",
+  "defaultInputModes": ["text/plain"],
+  "defaultOutputModes": ["text/plain"],
+  "capabilities": {
+    "streaming": false,
+    "functions": true
+  },
+  "skills": [
+    {
+      "id": "get-balance",
+      "name": "Get Loan Balance",
+      "description": "Get the outstanding balance for a specific loan"
+    },
+    {
+      "id": "get-details",
+      "name": "Get Loan Details",
+      "description": "Get full details for a specific loan including terms and payment info"
+    },
+    {
+      "id": "get-payment",
+      "name": "Get Payment Info",
+      "description": "Get the next payment date and amount for a loan"
+    },
+    {
+      "id": "list-loans",
+      "name": "List Loans",
+      "description": "List all loans for the customer"
+    }
+  ]
+}
