@@ -3,6 +3,9 @@ from google.adk.agents import Agent
 from google.adk.sessions import InMemorySessionService
 from toolbox_core import ToolboxSyncClient
 
+# Import the loan approval sub-agent
+from .loan import loan_approval_agent
+
 # Configure short-term session to use the in-memory service
 session_service = InMemorySessionService()
 
@@ -26,7 +29,7 @@ tools = [
 ]
 
 sub_agents = [
-  # TODO: Add sub-agents (Part 4)
+  loan_approval_agent,
 ]
 
 # Use the Gemini 2.5 Flash model since it performs quickly

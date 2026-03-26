@@ -23,6 +23,11 @@
       "id": "list-accounts",
       "name": "List Accounts",
       "description": "List all deposit accounts for the customer"
+    },
+    {
+      "id": "check-minimum-balance",
+      "name": "Check Minimum Balance",
+      "description": "Check if total deposit balance meets a minimum threshold (for loan equity verification)"
     }
   ]
 }

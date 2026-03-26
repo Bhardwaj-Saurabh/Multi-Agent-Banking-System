@@ -47,3 +47,15 @@ tools:
     statement: |
       SELECT account_type, balance
       FROM accounts
+
+  check-minimum-balance:
+    kind: mysql-query
+    source: deposit
+    description: Check if the total balance across all deposit accounts exceeds a minimum value. Returns true if total >= minimum, false otherwise.
+    parameters:
+      - name: minimum_balance
+        type: number
+        description: The minimum balance threshold to check against
+    statement: |
+      SELECT CASE WHEN SUM(balance) >= $1 THEN 'true' ELSE 'false' END as meets_minimum
+      FROM accounts

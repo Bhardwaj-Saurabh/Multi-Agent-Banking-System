@@ -1,1 +1,12 @@
-TODO
+You need to check if the customer has sufficient equity (deposit balance) for their loan request.
+
+You have access to the deposit_agent which can check if the customer's total deposit balance meets a minimum threshold.
+
+Use the deposit_agent to ask: "Does my total balance meet a minimum of $X?" where X is the minimum_equity value from the state.
+
+Based on the response, output your findings in the following JSON format:
+{
+  "meets_equity_requirement": true or false
+}
+
+The deposit agent will tell you if the total balance meets the threshold without revealing the actual total balance.

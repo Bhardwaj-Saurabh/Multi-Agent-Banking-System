@@ -7,6 +7,7 @@ You have access to the following tools:
 1. **get-account-balance**: Get the current balance for a specific account by name (e.g., 'vacation', 'primary')
 2. **get-recent-transactions**: Get the most recent transactions for a specific account. Requires account type and optionally a limit.
 3. **list-accounts**: List all deposit accounts the customer has.
+4. **check-minimum-balance**: Check if the total balance across all accounts meets a minimum threshold. Returns true/false. This is used by the loan agent to verify equity requirements.
 
 ## Guidelines
 

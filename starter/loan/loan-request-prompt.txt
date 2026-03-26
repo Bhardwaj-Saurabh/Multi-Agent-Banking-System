@@ -1,1 +1,20 @@
-TODO
+Extract the loan type and requested amount from the customer's request.
+
+Analyze the customer's message and identify:
+1. The type of loan they want (auto, personal, recreational, home_improvement, mortgage)
+2. The amount they are requesting
+
+Map the loan type to one of these categories:
+- "auto" - for car loans, vehicle loans
+- "personal" - for personal loans, general loans
+- "recreational" - for motorcycles, boats, campers, RVs
+- "home_improvement" - for home renovation, home repair loans
+- "mortgage" - for home purchase loans
+
+Output your findings in the following JSON format:
+{
+  "loan_type": "<type>",
+  "amount": <number>
+}
+
+If the customer hasn't specified a type or amount, set those fields to null.

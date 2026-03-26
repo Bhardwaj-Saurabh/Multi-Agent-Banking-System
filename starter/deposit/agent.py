@@ -23,6 +23,7 @@ tools = [
   db_client.load_tool("get-account-balance"),
   db_client.load_tool("get-recent-transactions"),
   db_client.load_tool("list-accounts"),
+  db_client.load_tool("check-minimum-balance"),
 ]
 
 # Use the Gemini 2.5 Flash model since it performs quickly

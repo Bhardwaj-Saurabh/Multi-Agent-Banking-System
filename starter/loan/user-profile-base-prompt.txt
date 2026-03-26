@@ -1,1 +1,13 @@
-TODO
+Analyze the customer profile document and determine their customer rating.
+
+Based on the loan history described in the profile, assign one of these ratings:
+- "excellent" - Perfect record, several loans never late (best clients only)
+- "great" - Several loans with only infrequent late payments
+- "good" - Few loans never late, OR several loans with occasional late payments
+- "fair" - Few loans that are sometimes late
+- "poor" - No loans with us or loans frequently late
+
+Output your assessment in the following JSON format:
+{
+  "customer_rating": "<rating>"
+}

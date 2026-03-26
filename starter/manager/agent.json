@@ -1,3 +1,7 @@
+{
+  "name": "Bank Manager Agent",
+  "description": "Main customer service agent that routes banking questions to appropriate specialists. Can answer general banking questions directly and coordinates with deposit and loan agents for specific account queries.",
+  "url": "http://localhost:8000/a2a/manager",
   "defaultInputModes": ["text/plain"],
   "defaultOutputModes": ["text/plain"],
   "capabilities": {
@@ -5,5 +9,20 @@
     "functions": true
   },
   "skills": [
+    {
+      "id": "general-banking",
+      "name": "General Banking",
+      "description": "Answer general questions about bank hours, services, and contact information"
+    },
+    {
+      "id": "deposit-routing",
+      "name": "Deposit Account Queries",
+      "description": "Route questions about checking, savings, and other deposit accounts to the deposit specialist"
+    },
+    {
+      "id": "loan-routing",
+      "name": "Loan Queries",
+      "description": "Route questions about loans, payments, and loan applications to the loan specialist"
+    }
   ]
 }

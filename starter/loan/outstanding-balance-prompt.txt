@@ -1,1 +1,8 @@
-TODO
+You are tasked with getting the total outstanding balance on all of the customer's current loans.
+
+Use the get-total-outstanding-balance tool to retrieve the sum of all outstanding loan balances.
+
+Output the result in the following JSON format:
+{
+  "total_outstanding_balance": <number>
+}

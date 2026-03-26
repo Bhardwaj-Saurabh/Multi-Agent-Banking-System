@@ -1,6 +1,6 @@
 {
   "name": "Loan Account Agent",
-  "description": "Handles customer questions about loans including auto loans, personal loans, and mortgages. Can provide loan balances, payment details, and loan terms.",
+  "description": "Handles customer questions about loans including auto loans, personal loans, and mortgages. Can provide loan balances, payment details, loan terms, and process loan applications.",
   "url": "http://localhost:8000/a2a/loan",
   "defaultInputModes": ["text/plain"],
   "defaultOutputModes": ["text/plain"],
@@ -28,6 +28,11 @@
       "id": "list-loans",
       "name": "List Loans",
       "description": "List all loans for the customer"
+    },
+    {
+      "id": "loan-approval",
+      "name": "Loan Application",
+      "description": "Process loan applications and determine eligibility for new loans"
     }
   ]
 }
