@@ -3,7 +3,7 @@ sources:
     kind: mysql
     host: ${MYSQL_HOST}
     port: ${MYSQL_PORT:3306}
-    database: bank
+    database: ${MYSQL_DATABASE:bank-data}
     user: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
 
