@@ -59,3 +59,6 @@ test_results.*
 # Binaries
 toolbox.exe
 toolbox
+
+# ADK runtime files
+.adk/
