@@ -1,0 +1,122 @@
+sources:
+  bank:
+    kind: mysql
+    host: ${MYSQL_HOST}
+    port: ${MYSQL_PORT:3306}
+    database: ${MYSQL_DATABASE:bank-data}
+    user: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+
+tools:
+  # ============================================================================
+  # Deposit Account Tools
+  # ============================================================================
+  get-account-balance:
+    kind: mysql-sql
+    source: bank
+    description: Get the current balance for a specific account by account type name
+    parameters:
+      - name: account_type
+        type: string
+        description: The type/name of the account (e.g., 'vacation', 'primary')
+    statement: |
+      SELECT account_type, balance
+      FROM accounts
+      WHERE account_type = ?
+
+  get-recent-transactions:
+    kind: mysql-sql
+    source: bank
+    description: Get the most recent transactions for a specific account
+    parameters:
+      - name: account_type
+        type: string
+        description: The type/name of the account (e.g., 'vacation', 'primary')
+      - name: limit
+        type: integer
+        description: Maximum number of transactions to return (default 10)
+    statement: |
+      SELECT t.transaction_date, t.amount, t.description
+      FROM transactions t
+      JOIN accounts a ON t.account_id = a.id
+      WHERE a.account_type = ?
+      ORDER BY t.transaction_date DESC
+      LIMIT ?
+
+  list-accounts:
+    kind: mysql-sql
+    source: bank
+    description: List all deposit accounts for the customer
+    statement: |
+      SELECT account_type, balance
+      FROM accounts
+
+  check-minimum-balance:
+    kind: mysql-sql
+    source: bank
+    description: Check if the total balance across all deposit accounts exceeds a minimum value. Returns true if total >= minimum, false otherwise.
+    parameters:
+      - name: minimum_balance
+        type: string
+        description: The minimum balance threshold to check against (e.g., '5000.00')
+    statement: |
+      SELECT CASE WHEN SUM(balance) >= ? THEN 'true' ELSE 'false' END as meets_minimum
+      FROM accounts
+
+  # ============================================================================
+  # Loan Tools
+  # ============================================================================
+  get-outstanding-balance:
+    kind: mysql-sql
+    source: bank
+    description: Get the outstanding balance for a specific loan by loan type
+    parameters:
+      - name: loan_type
+        type: string
+        description: The type of loan (e.g., 'auto', 'personal', 'mortgage')
+    statement: |
+      SELECT loan_type, outstanding_balance
+      FROM loans
+      WHERE loan_type = ?
+
+  get-loan-details:
+    kind: mysql-sql
+    source: bank
+    description: Get full details for a specific loan including terms, amount, and payment info
+    parameters:
+      - name: loan_type
+        type: string
+        description: The type of loan (e.g., 'auto', 'personal', 'mortgage')
+    statement: |
+      SELECT loan_type, origination_date, amount, outstanding_balance, terms, monthly_payment, next_payment_date
+      FROM loans
+      WHERE loan_type = ?
+
+  get-next-payment-date:
+    kind: mysql-sql
+    source: bank
+    description: Get the next payment date and amount for a specific loan
+    parameters:
+      - name: loan_type
+        type: string
+        description: The type of loan (e.g., 'auto', 'personal', 'mortgage')
+    statement: |
+      SELECT loan_type, next_payment_date, monthly_payment
+      FROM loans
+      WHERE loan_type = ?
+
+  list-loans:
+    kind: mysql-sql
+    source: bank
+    description: List all loans for the customer
+    statement: |
+      SELECT loan_type, outstanding_balance, monthly_payment, next_payment_date
+      FROM loans
+
+  get-total-outstanding-balance:
+    kind: mysql-sql
+    source: bank
+    description: Get the total outstanding balance across all loans
+    statement: |
+      SELECT SUM(outstanding_balance) as total_outstanding_balance
+      FROM loans
