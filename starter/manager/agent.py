@@ -1,4 +1,3 @@
-import logging
 import os
 from google.adk.agents import Agent
 from google.adk.agents.remote_a2a_agent import RemoteA2aAgent, AGENT_CARD_WELL_KNOWN_PATH
@@ -17,20 +16,19 @@ with open(instruction_file_path, "r") as f:
 # Set up the tools that we will be using for the root agent
 tools = []
 
-# Base URL for A2A agents (can be configured via environment variable)
-base_url = os.environ.get("A2A_BASE_URL", "http://localhost:8000")
+# A2A base URL (all agents run on same server)
+a2a_base_url = os.environ.get("A2A_BASE_URL", "http://localhost:8000")
 
-# Set up other agents that we can delegate to via A2A
+# Define the remote A2A agent for deposit
 deposit_agent = RemoteA2aAgent(
   name="deposit_agent",
-  description="Handles questions about deposit accounts including checking and savings. Can provide account balances, transaction history, and list accounts.",
-  agent_card_url=f"{base_url}/a2a/deposit/{AGENT_CARD_WELL_KNOWN_PATH}",
+  agent_card=f"{a2a_base_url}/a2a/deposit{AGENT_CARD_WELL_KNOWN_PATH}"
 )
 
+# Define the remote A2A agent for loan
 loan_agent = RemoteA2aAgent(
   name="loan_agent",
-  description="Handles questions about loans including auto loans, personal loans, and mortgages. Can provide loan balances, payment details, loan terms, and process loan applications.",
-  agent_card_url=f"{base_url}/a2a/loan/{AGENT_CARD_WELL_KNOWN_PATH}",
+  agent_card=f"{a2a_base_url}/a2a/loan{AGENT_CARD_WELL_KNOWN_PATH}"
 )
 
 sub_agents = [

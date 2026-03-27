@@ -1,4 +1,3 @@
-import logging
 import os
 from typing import AsyncGenerator
 
@@ -19,15 +18,21 @@ def load_instructions(prompt_file: str):
 # Model to use for all LLM agents
 model = "gemini-2.5-flash"
 
-# Base URL for A2A agents
-base_url = os.environ.get("A2A_BASE_URL", "http://localhost:8000")
-
 # GCS bucket for policy and customer documents
 gcs_bucket = os.environ.get("GCS_BUCKET", "")
 
 # Set up toolbox client for loan tools
 toolbox_url = os.environ.get("TOOLBOX_URL", "http://127.0.0.1:5000")
 db_client = ToolboxSyncClient(toolbox_url)
+
+# A2A base URL (all agents run on same server)
+a2a_base_url = os.environ.get("A2A_BASE_URL", "http://localhost:8000")
+
+# Remote A2A agent for deposit equity check
+deposit_a2a_agent = RemoteA2aAgent(
+    name="deposit_agent",
+    agent_card=f"{a2a_base_url}/a2a/deposit{AGENT_CARD_WELL_KNOWN_PATH}"
+)
 
 # ============================================================================
 # Sub-Agent 1: Get Requested Loan Value
@@ -166,14 +171,8 @@ total_value_agent = TotalValueAgent(name="total_value_agent")
 
 # ============================================================================
 # Sub-Agent 5: Check Equity Agent
-# Uses A2A to communicate with deposit agent to check minimum balance
+# Uses A2A to communicate with deposit agent for equity verification
 # ============================================================================
-deposit_a2a_agent = RemoteA2aAgent(
-    name="deposit_agent",
-    description="Handles questions about deposit accounts. Can check if total balance meets a minimum threshold.",
-    agent_card_url=f"{base_url}/a2a/deposit/{AGENT_CARD_WELL_KNOWN_PATH}",
-)
-
 check_equity_agent = LlmAgent(
     name="check_equity_agent",
     model=model,

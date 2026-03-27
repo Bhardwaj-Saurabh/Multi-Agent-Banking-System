@@ -55,3 +55,7 @@ Thumbs.db
 # Test output
 test_results.*
 *.log
+
+# Binaries
+toolbox.exe
+toolbox
