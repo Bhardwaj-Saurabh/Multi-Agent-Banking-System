@@ -3,8 +3,33 @@ import requests
 import json
 from datetime import datetime
 import sys
+import time
 from contextlib import contextmanager, ExitStack
 import csv
+
+# Retry configuration
+MAX_RETRIES = 3
+BASE_DELAY = 2  # seconds
+
+def retry_with_backoff(func, *args, **kwargs):
+    """Execute function with exponential backoff retry on 429 errors."""
+    for attempt in range(MAX_RETRIES):
+        try:
+            response = func(*args, **kwargs)
+            # Check if response contains 429 error in body
+            if response.status_code == 200:
+                data = response.json()
+                if "error" in str(data) and "429" in str(data):
+                    raise requests.exceptions.HTTPError("429 in response body")
+            return response
+        except (requests.exceptions.HTTPError, requests.exceptions.RequestException) as e:
+            if attempt < MAX_RETRIES - 1 and "429" in str(e):
+                wait_time = BASE_DELAY ** (attempt + 1)
+                print(f"Rate limited. Retrying in {wait_time}s... (attempt {attempt + 1}/{MAX_RETRIES})", file=sys.stderr)
+                time.sleep(wait_time)
+            else:
+                raise
+    return None
 
 @contextmanager
 def output_manager(out, formats):
@@ -126,8 +151,9 @@ def handle_prompt_request(url, prompt, task=None, context=None, message=None, ha
             "message": message_data
         }
     }
-    response = requests.post(url, json=payload)
-    process_response(response, handles, payload)
+    response = retry_with_backoff(requests.post, url, json=payload)
+    if response:
+        process_response(response, handles, payload)
 
 def handle_infile(infile, handles):
     input_stream = open(infile, 'r') if infile != '-' else sys.stdin
@@ -156,6 +182,7 @@ def handle_infile(infile, handles):
                     fh.write("-" * 5 + "\n\n")
 
             handle_prompt_request(url, prompt, task or None, context or None, message or None, handles)
+            time.sleep(1)  # Brief delay between requests to avoid rate limiting
     if input_stream is not sys.stdin:
         input_stream.close()
 
