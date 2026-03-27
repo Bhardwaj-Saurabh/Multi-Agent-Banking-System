@@ -1,6 +1,8 @@
 import os
 from typing import AsyncGenerator
 
+from pydantic import BaseModel
+
 from google.adk.agents import SequentialAgent, ParallelAgent, LlmAgent, BaseAgent, InvocationContext
 from google.adk.agents.remote_a2a_agent import RemoteA2aAgent, AGENT_CARD_WELL_KNOWN_PATH
 from google.adk.events import Event, EventActions
@@ -14,6 +16,26 @@ def load_instructions(prompt_file: str):
     instruction_file_path = os.path.join(script_dir, prompt_file)
     with open(instruction_file_path, "r") as f:
         return f.read()
+
+# ============================================================================
+# Pydantic Models for Output Schemas
+# ============================================================================
+class LoanRequest(BaseModel):
+    loan_type: str
+    amount: int
+
+class OutstandingBalance(BaseModel):
+    total_outstanding_balance: int
+
+class PolicyCriteria(BaseModel):
+    debt_to_equity_ratio: int
+    required_rating: str
+
+class EquityCheck(BaseModel):
+    meets_equity_requirement: bool
+
+class UserProfile(BaseModel):
+    customer_rating: str
 
 # Model to use for all LLM agents
 model = "gemini-2.5-flash"
@@ -43,14 +65,7 @@ get_requested_value_agent = LlmAgent(
     model=model,
     instruction=load_instructions("loan-request-prompt.txt"),
     output_key="loan_request",
-    output_schema={
-        "type": "object",
-        "properties": {
-            "loan_type": {"type": "string"},
-            "amount": {"type": "number"}
-        },
-        "required": ["loan_type", "amount"]
-    },
+    output_schema=LoanRequest,
 )
 
 # ============================================================================
@@ -63,13 +78,7 @@ outstanding_balance_agent = LlmAgent(
     instruction=load_instructions("outstanding-balance-prompt.txt"),
     tools=[db_client.load_tool("get-total-outstanding-balance")],
     output_key="outstanding_balance",
-    output_schema={
-        "type": "object",
-        "properties": {
-            "total_outstanding_balance": {"type": "number"}
-        },
-        "required": ["total_outstanding_balance"]
-    },
+    output_schema=OutstandingBalance,
 )
 
 # ============================================================================
@@ -104,14 +113,7 @@ policy_agent = LlmAgent(
     instruction=policy_agent_instruction,
     tools=[load_artifacts],
     output_key="policy_criteria",
-    output_schema={
-        "type": "object",
-        "properties": {
-            "debt_to_equity_ratio": {"type": "number"},
-            "required_rating": {"type": "string"}
-        },
-        "required": ["debt_to_equity_ratio", "required_rating"]
-    },
+    output_schema=PolicyCriteria,
 )
 
 # ============================================================================
@@ -179,13 +181,7 @@ check_equity_agent = LlmAgent(
     instruction=load_instructions("check-equity-prompt.txt"),
     sub_agents=[deposit_a2a_agent],
     output_key="equity_check",
-    output_schema={
-        "type": "object",
-        "properties": {
-            "meets_equity_requirement": {"type": "boolean"}
-        },
-        "required": ["meets_equity_requirement"]
-    },
+    output_schema=EquityCheck,
 )
 
 # ============================================================================
@@ -198,13 +194,7 @@ user_profile_agent = LlmAgent(
     instruction=load_instructions("user-profile-base-prompt.txt"),
     tools=[load_artifacts],
     output_key="user_profile",
-    output_schema={
-        "type": "object",
-        "properties": {
-            "customer_rating": {"type": "string"}
-        },
-        "required": ["customer_rating"]
-    },
+    output_schema=UserProfile,
 )
 
 # ============================================================================

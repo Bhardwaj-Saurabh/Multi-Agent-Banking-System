@@ -19,7 +19,7 @@ tools:
     statement: |
       SELECT account_type, balance
       FROM accounts
-      WHERE account_type = $1
+      WHERE account_type = ?
 
   get-recent-transactions:
     kind: mysql-sql
@@ -36,9 +36,9 @@ tools:
       SELECT t.transaction_date, t.amount, t.description
       FROM transactions t
       JOIN accounts a ON t.account_id = a.id
-      WHERE a.account_type = $1
+      WHERE a.account_type = ?
       ORDER BY t.transaction_date DESC
-      LIMIT $2
+      LIMIT ?
 
   list-accounts:
     kind: mysql-sql
@@ -54,8 +54,8 @@ tools:
     description: Check if the total balance across all deposit accounts exceeds a minimum value. Returns true if total >= minimum, false otherwise.
     parameters:
       - name: minimum_balance
-        type: number
-        description: The minimum balance threshold to check against
+        type: string
+        description: The minimum balance threshold to check against (e.g., '5000.00')
     statement: |
-      SELECT CASE WHEN SUM(balance) >= $1 THEN 'true' ELSE 'false' END as meets_minimum
+      SELECT CASE WHEN SUM(balance) >= ? THEN 'true' ELSE 'false' END as meets_minimum
       FROM accounts

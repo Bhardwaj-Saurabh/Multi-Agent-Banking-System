@@ -2,6 +2,7 @@
   "name": "Deposit Account Agent",
   "description": "Handles customer questions about deposit accounts including checking and savings accounts. Can provide account balances, transaction history, and list accounts.",
   "url": "http://localhost:8000/a2a/deposit",
+  "version": "1.0.0",
   "defaultInputModes": ["text/plain"],
   "defaultOutputModes": ["text/plain"],
   "capabilities": {
@@ -12,22 +13,26 @@
     {
       "id": "get-balance",
       "name": "Get Account Balance",
-      "description": "Get the current balance for a specific deposit account"
+      "description": "Get the current balance for a specific deposit account",
+      "tags": ["deposit", "balance"]
     },
     {
       "id": "get-transactions",
       "name": "Get Transaction History",
-      "description": "Get recent transactions for a specific deposit account"
+      "description": "Get recent transactions for a specific deposit account",
+      "tags": ["deposit", "transactions"]
     },
     {
       "id": "list-accounts",
       "name": "List Accounts",
-      "description": "List all deposit accounts for the customer"
+      "description": "List all deposit accounts for the customer",
+      "tags": ["deposit", "accounts"]
     },
     {
       "id": "check-minimum-balance",
       "name": "Check Minimum Balance",
-      "description": "Check if total deposit balance meets a minimum threshold (for loan equity verification)"
+      "description": "Check if total deposit balance meets a minimum threshold (for loan equity verification)",
+      "tags": ["deposit", "balance", "equity"]
     }
   ]
 }

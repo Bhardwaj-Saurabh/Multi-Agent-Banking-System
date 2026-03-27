@@ -11,19 +11,26 @@ Multi-agent banking prototype using Google's Agent Development Kit (ADK). Three 
 
 ## Commands
 
+### Install Dependencies
+```bash
+pip install -r starter/requirements.txt
+```
+
 ### Run the Agent Server
 ```bash
+cd starter
 adk web --a2a
 # Default: http://localhost:8000
 # Use --port 8001 to change port
 ```
 
 ### Run MCP Database Toolbox
+Requires `toolbox` binary (Google MCP Toolbox for Databases). Run from each agent directory:
 ```bash
-cd starter/<agent>
+cd starter/deposit   # or starter/loan
 # Export env vars first (bash example):
 export $(grep -v '^#' ../.env | xargs)
-/path/to/toolbox --tools-files "tools.yaml"
+toolbox --tools-files "tools.yaml"
 # Default: http://127.0.0.1:5001
 ```
 
@@ -38,6 +45,8 @@ python testing/bin/a2a.py --url http://localhost:8000/a2a/deposit --prompt "How 
 # Run test scenarios (produces .txt, .json, .csv output files)
 python testing/bin/a2a.py --in testing/test_scenarios.csv --out test_results
 ```
+
+Test scenarios CSV format: `url,prompt,message_id,task_id,context_id` (message_id groups multi-turn conversations)
 
 ## Architecture
 
@@ -71,11 +80,13 @@ Sub-agents use `output_schema` and `output_key` for state management. Orchestrat
 
 ## Environment Setup
 
-Copy `starter/.env-sample` to `.env` and configure:
+Copy `starter/.env-sample` to `starter/.env` and configure:
 - `GOOGLE_GENAI_USE_VERTEXAI=TRUE`
 - `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION`
-- `TOOLBOX_URL` (MCP Toolbox endpoint)
+- `TOOLBOX_URL` (MCP Toolbox endpoint, default `http://127.0.0.1:5001`)
 - `MYSQL_HOST`, `MYSQL_USER`, `MYSQL_PASSWORD`
+- `GCS_BUCKET` (for loan policy and customer profile PDFs)
+- `A2A_BASE_URL` (optional, defaults to `http://localhost:8000`)
 
 ## Key Constraints
 
