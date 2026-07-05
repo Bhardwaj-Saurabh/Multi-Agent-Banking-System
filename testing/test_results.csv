@@ -1,0 +1,34 @@
+msg-001-1,"Your current balance for the vacation account is $1500.00. 
+"
+msg-002-1,"To which account are you referring? Your checking, savings, or a loan account?"
+msg-002-2,"Could you please specify if you mean your primary checking account, savings account, or a loan account?"
+msg-003-1,"You have a total of two accounts:
+* vacation: $1500.00
+* primary: $5230.50
+
+I cannot provide a total balance across all accounts for security reasons. I can only provide the balance for each account individually."
+msg-004-1,"I can help you with details about your loans, including outstanding balances, next payment dates, and full loan details. However, I can't look up specific past payment amounts or dates.
+
+To help me understand what you mean by 'main account', could you please tell me if you are referring to a specific type of loan, like an auto loan, personal loan, or mortgage?
+
+If you'd like, I can list all your loans for you, and then you can tell me which one you're interested in for more details like its next payment due date or full terms."
+msg-005-1,"You paid $200.00 to the hotel on September 11, 2025."
+msg-006-1,"I can't directly add funds to your account through this tool. For assistance with deposits or transfers, please visit your nearest branch or use our online banking services."
+msg-007-1,"I can't directly help you with that. My purpose is to provide information about your deposit accounts, such as checking balances or recent transactions. I cannot facilitate money transfers or provide funds for purchases."
+msg-007-2,Congratulations! We are pleased to inform you that your loan request has been approved. A loan officer will be in touch with you shortly to finalize all the details.
+msg-008-1,Excellent news! I'm happy to inform you that your loan application has been approved. A loan officer will be in touch with you shortly to finalize all the details. Congratulations!
+msg-008-2,"I'm sorry, but I am unable to approve your loan at this time. If you have any questions or would like to discuss this further, please feel free to speak with a loan officer."
+msg-009-1,"I'm sorry, but I'm unable to approve your loan at this time. If you have any questions, please feel free to speak with a loan officer."
+msg-010-1,"That's great news! I'm happy to inform you that your loan for $10,000 has been approved. A loan officer will be in touch with you shortly to finalize all the details. Congratulations!"
+msg-011-1,Your next auto payment of $471.78 is due on 2025-10-01.
+msg-012-1,"You owe $10,159.25 on your personal loan."
+msg-013-1,"Yes, you have two outstanding loans:
+
+*   **Auto Loan:** Outstanding balance of $12,024.04
+*   **Personal Loan:** Outstanding balance of $10,159.25
+
+Is there anything else I can help you with regarding your loans?"
+msg-014-1,"I can help with that. Are you interested in a summary of your deposit accounts, like checking and savings, or would you like to know about your loans, such as outstanding balances and payment information?"
+msg-015-1,"I cannot provide the total balance across all your accounts due to security reasons. I can only provide balances for individual accounts.
+
+Additionally, my capabilities are limited to deposit accounts (checking and savings). I cannot provide information about loans. Please ask me about your individual deposit account balances if you'd like to know them!"

@@ -25,14 +25,13 @@ adk web --a2a
 ```
 
 ### Run MCP Database Toolbox
-Requires `toolbox` binary (Google MCP Toolbox for Databases). Run from each agent directory:
+Requires the `toolbox` binary (Google MCP Toolbox for Databases). The combined `starter/tools.yaml` holds ALL deposit + loan tools, so one instance serves every agent (per-agent `deposit/tools.yaml` and `loan/tools.yaml` also exist for running them in isolation).
 ```bash
-cd starter/deposit   # or starter/loan
-# Export env vars first (bash example):
-export $(grep -v '^#' ../.env | xargs)
-toolbox --tools-files "tools.yaml"
-# Default: http://127.0.0.1:5001
+cd starter
+export $(grep -v '^#' .env | xargs)   # export env vars (bash)
+./toolbox --tools-file tools.yaml --port 5001
 ```
+Note: `toolbox` defaults to port **5000** and the code's `TOOLBOX_URL` default is `http://127.0.0.1:5000`, but `.env-sample` sets `:5001`. Keep the `--port` flag and `TOOLBOX_URL` in sync.
 
 ### Test Agents via A2A Protocol
 ```bash
@@ -58,20 +57,23 @@ Each agent follows this pattern:
 - `tools.yaml`: MCP Toolbox config for database tools (MySQL)
 
 ### Inter-Agent Communication
-- Manager uses `RemoteA2aAgent` to connect to deposit/loan agents by their agent card URLs
-- Agents do NOT import each other's code - all cross-agent calls go through A2A
+- Manager connects to deposit/loan agents as `RemoteA2aAgent` **sub-agents** (ADK delegation/transfer), not tools — it has no DB tools of its own
+- Agents do NOT import each other's code - all cross-agent calls go through A2A over the agent card URLs
 - Agent cards accessible at: `http://localhost:8000/a2a/<agent>/.well-known/agent-card.json`
+- Cross-agent equity check: the loan agent's `check_equity_agent` reaches the deposit agent the same way — via `sub_agents=[deposit_a2a_agent]`, which calls deposit's `check-minimum-balance` tool (returns only a boolean, never the actual balance)
 
 ### Loan Approval Workflow (loan/loan.py)
-Complex orchestration using multiple sub-agents:
-1. `get_requested_value_agent` - Extract loan type and amount from request
-2. `outstanding_balance_agent` - Get total outstanding loan balance
-3. `policy_agent` - Load policy PDF from GCS, extract criteria
-4. `total_value_agent` - Custom agent (not LLM) to compute minimum required equity
-5. `check_equity_agent` - A2A call to deposit agent's check-minimum-balance tool
-6. `user_profile_agent` - Load customer profile PDF from GCS
+A single `SequentialAgent` (`loan_approval_agent`) runs 5 phases; state flows between them via each sub-agent's `output_key` (Pydantic `output_schema` validates the shape). Actual execution order:
+1. **Phase 1** — `get_requested_value_agent` → `loan_request` {loan_type, amount}
+2. **Phase 2** (`ParallelAgent`, run concurrently):
+   - `outstanding_balance_agent` → `outstanding_balance` (DB tool `get-total-outstanding-balance`)
+   - `policy_agent` → `policy_criteria` {debt_to_equity_ratio, required_rating} (reads policy PDF via `load_artifacts`)
+   - `user_profile_agent` → `user_profile` {customer_rating} (reads customer PDF via `load_artifacts`)
+3. **Phase 3** — `total_value_agent`, a custom non-LLM `BaseAgent` computing `minimum_equity = (outstanding_balance + amount) / debt_to_equity_ratio` → `minimum_equity`
+4. **Phase 4** — `check_equity_agent` → `equity_check` {meets_equity_requirement} (A2A to deposit, see above)
+5. **Phase 5** — `approval_decision_agent` → `approval_decision` (final approve/reject message)
 
-Sub-agents use `output_schema` and `output_key` for state management. Orchestration uses `SequentialAgent` and `ParallelAgent`.
+Note: the GCS PDFs (loan policy, customer profile) are surfaced to the `load_artifacts` tool; `GCS_BUCKET` must be configured.
 
 ### Database Schema
 - **accounts**: id, customer_id, account_type, balance
@@ -83,7 +85,7 @@ Sub-agents use `output_schema` and `output_key` for state management. Orchestrat
 Copy `starter/.env-sample` to `starter/.env` and configure:
 - `GOOGLE_GENAI_USE_VERTEXAI=TRUE`
 - `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION`
-- `TOOLBOX_URL` (MCP Toolbox endpoint, default `http://127.0.0.1:5001`)
+- `TOOLBOX_URL` (MCP Toolbox endpoint; code default `http://127.0.0.1:5000`, `.env-sample` uses `:5001`)
 - `MYSQL_HOST`, `MYSQL_USER`, `MYSQL_PASSWORD`
 - `GCS_BUCKET` (for loan policy and customer profile PDFs)
 - `A2A_BASE_URL` (optional, defaults to `http://localhost:8000`)

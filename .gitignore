@@ -54,6 +54,8 @@ Thumbs.db
 
 # Test output
 test_results.*
+# ...but the submitted test evidence under testing/ must be tracked
+!testing/test_results.*
 *.log
 
 # Binaries

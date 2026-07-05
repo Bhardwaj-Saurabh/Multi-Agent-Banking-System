@@ -1,11 +1,15 @@
 [project]
 name = "project"
 version = "0.1.0"
-description = "Add your description here"
+description = "Multi-agent banking system built with Google ADK and the A2A protocol"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "a2a-sdk>=0.3.6",
+    # a2a-sdk must stay <0.4: google-adk 2.3.0 imports symbols removed in a2a-sdk 1.x
+    "a2a-sdk>=0.3.6,<0.4",
     "google-adk>=1.17.0",
-    "toolbox-core>=0.5.0",
+    # toolbox-core must match the toolbox server binary's MCP protocol; <1.0 speaks 2024-11-05
+    "toolbox-core>=0.5.0,<1.0",
+    # required by a2a-sdk's HTTP server (JSONRPCApplication) for `adk web --a2a`
+    "sse-starlette",
 ]
