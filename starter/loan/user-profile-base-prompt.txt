@@ -1,4 +1,9 @@
-Analyze the customer profile document and determine their customer rating.
+Analyze the customer profile document below and determine the customer's rating.
+
+CUSTOMER PROFILE (Example National Bank)
+Subject: Customer Profile of Chris Scott
+Chris has been a customer of the bank for 10 years. They are married with two children and are employed at Excaliburs Excellent Eatery as the executive chef.
+In that time, they have taken out eight loans, two of which are currently active. Their first loan was a personal loan that they had trouble paying on time; however, they have since paid off that loan and paid all fees associated with the late payments. Since then, they are late on average two or three times a year on their payments, although never later than 45 days late.
 
 Based on the loan history described in the profile, assign one of these ratings:
 - "excellent" - Perfect record, several loans never late (best clients only)

@@ -85,11 +85,20 @@ outstanding_balance_agent = LlmAgent(
 # Sub-Agent 3: Policy Agent
 # Loads policy PDF from GCS and extracts criteria
 # ============================================================================
-policy_agent_instruction = """You are analyzing the loan policy document to extract the criteria for a specific loan type and amount.
+policy_agent_instruction = """You are analyzing the bank's loan policy to determine the criteria for a specific loan request.
 
-Based on the loan_request in the state (loan_type and amount), find the matching criteria from the policy document.
+The customer's requested loan_type and amount appear earlier in this conversation (the loan_request). Use them to select the SINGLE matching policy row below, then return that row's debt-to-equity ratio and required customer rating.
 
-The policy document defines different debt-to-equity ratios and minimum customer ratings for different loan types and amounts.
+LOAN POLICY (Example National Bank):
+- Auto Loans under $10,000            -> debt_to_equity_ratio: 5,    required_rating: fair
+- Auto Loans $10,000 and up           -> debt_to_equity_ratio: 7,    required_rating: good
+- Recreational Vehicles (motorcycles, boats, campers, RVs, similar) -> debt_to_equity_ratio: 6, required_rating: good
+- Home Improvement under $20,000      -> debt_to_equity_ratio: 4,    required_rating: fair
+- Home Improvement $20,000 and up     -> debt_to_equity_ratio: 6,    required_rating: fair
+- Personal Loans under $100           -> debt_to_equity_ratio: 1000, required_rating: poor
+- Personal Loans $100 up to $500      -> debt_to_equity_ratio: 500,  required_rating: fair
+- Personal Loans $500 up to $5,000    -> debt_to_equity_ratio: 200,  required_rating: good
+- Personal Loans $5,000 and up        -> debt_to_equity_ratio: 100,  required_rating: great
 
 Loan type mappings:
 - "auto" -> Auto Loans
@@ -98,13 +107,13 @@ Loan type mappings:
 - "home_improvement" -> Home Improvement
 - "mortgage" -> Use Home Improvement criteria as fallback
 
+Rating levels from best to worst: excellent, great, good, fair, poor
+
 Output the criteria in the following JSON format:
 {
   "debt_to_equity_ratio": <number>,
   "required_rating": "<rating>"
 }
-
-Rating levels from best to worst: excellent, great, good, fair, poor
 """
 
 policy_agent = LlmAgent(

@@ -2,6 +2,8 @@ You are tasked with getting the total outstanding balance on all of the customer
 
 Use the get-total-outstanding-balance tool to retrieve the sum of all outstanding loan balances.
 
+The tool returns a decimal dollar amount (for example, "22183.29"). Report it as a whole number of dollars, rounded to the nearest dollar and WITHOUT the decimal point or cents. For example, 22183.29 must be reported as 22183 (NOT 2218329).
+
 Output the result in the following JSON format:
 {
   "total_outstanding_balance": <number>
